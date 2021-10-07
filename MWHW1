@@ -1,0 +1,176 @@
+// CSC 234
+// M2HW1
+// Adventure Call (second iteration)
+// Jennifer Hubbard
+// September 27, 2021
+
+#include <iostream>
+using namespace std;
+
+// Function prototypes
+// list each location function here
+void room();
+void table();
+void trapdoor();
+void passage();
+void passage2();
+void gate();
+void unlock();
+
+bool firstPlay = true; // is this first playthrough
+bool hasKey = false;   // do they have the key?
+
+int main() {
+ 
+  // start gameplay
+  char again;
+  cout << "Welcome to the game!" << endl;
+  if (firstPlay) {
+    cout << "Are you ready to begin?(y/n)";
+  }
+  else {
+    cout << "Would you like to play again?(y/n)";
+  }
+  cin >> again;
+  if (again == 'y' || again == 'Y') {
+    // start in room
+    room();
+    firstPlay = false;
+    // loop back around to play again
+    main();
+  }
+  else {
+    cout << "Goodbye, see you next time!" << endl;
+  }
+
+  return 0;
+}
+
+/*
+Room - leads to trapdoor if successful.
+*/
+void room() {
+  cout << "You are in a room. There is one WINDOW and a TRAPDOOR in the floor." << endl;
+  cout << "What do you want to do?(window/trapdoor)" << endl;
+  string command;
+  cin >> command;
+  if (command == "window") {
+    cout << "You chose unwisely, you have fallen to your death." << endl;
+    firstPlay = false;
+    // loop back around to play again
+    main();
+  }
+  else if (command == "trapdoor") {
+    cout << "You open the trapdoor but see nothing but darkness." << endl;
+    table();
+  }
+}
+
+/*
+Table - has light sources.
+*/
+void table() {
+    cout << "You look around the room and see a table. On it are a flashlight and a candle and matches." << endl;
+    cout << "What do you want to use?(flashlight/candle)" << endl;
+    string command;
+    cin >> command;
+    if (command == "flashlight") {
+      cout << "The flashlight has no batteries. You trip and fall into the trapdoor. You are now dead." << endl;
+      firstPlay = false;
+      // loop back around to play again
+      main();
+    }
+    else if (command == "candle") {
+      cout << "You light the candle and proceed down the ladder into the opening." << endl;
+      trapdoor();
+    }
+}
+
+/*
+Trapdoor - leads to passage.
+*/
+void trapdoor() {
+  cout << "You are now in a narrow passage." << endl;
+  cout << "You can walk EAST or WEST." << endl;
+  cout << "Which way would you like to go?(east/west)" << endl;
+  string command;
+  cin >> command;
+  if (command == "east") {
+    passage();
+  }
+  else if (command == "west") {
+    gate();
+  }
+}
+
+/*
+Passage - leads east or west and has key.
+*/
+void passage() {
+  cout << "You have reached the middle of the passage" << endl;
+  cout << "You can walk EAST or WEST." << endl;
+  cout << "You see a golden KEY on the floor" << endl;
+  string command;
+  cin >> command;
+  if (command == "east") {
+    cout << "You slip into a hole in the floor over a stream and are swept away." << endl;
+    firstPlay = false;
+    // loop back around to play again
+    main();
+  }
+  else if (command == "key") {
+    hasKey = true;
+    cout << "You have picked up the key." << endl;
+    passage2();
+  }
+}
+
+/*
+Passage2 - leads east or west and leads to gate if successful.
+*/
+void passage2() {
+  cout << "You have reached the middle of the passage" << endl;
+  cout << "You can walk EAST or WEST." << endl;
+  string command;
+  cin >> command;
+  if (command == "east") {
+    cout << "You slip into a hole in the floor over a stream and are swept away." << endl;
+    firstPlay = false;
+    // loop back around to play again
+    main();
+  }
+  else if (command == "west") {
+    gate();
+  }
+}
+
+/*
+Gate - has gate to be unlocked with key.
+*/
+void gate() {
+  cout << "You are now standing in front of a locked metal gate" << endl;
+  cout << "If you do not have the KEY, you must walk back EAST." << endl;
+  string command;
+  cin >> command;
+  if (command == "east") {
+      trapdoor();
+  }
+  if (command == "key") {
+    if (hasKey) {
+      unlock();
+    }
+    else {
+      cout << "The gate is locked and you must go back EAST." << endl;
+      gate();
+    }
+  }
+} 
+
+/*
+Unlock - gate is unlocked and you get treasure/win.
+*/
+void unlock() {
+  cout << "You unlock the gate and walk through." << endl;
+  cout << "The golden treasure is waiting for you! You win!" << endl;
+}
+
